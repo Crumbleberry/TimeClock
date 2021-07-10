@@ -14,6 +14,7 @@ app.set('view engine', 'ejs');
 // Set up the database
 const mongoose = require('mongoose');
 const TimeCheck = require('./Models/TimeChecks');
+const User = require('./Models/Users');
 
 // Mongo DB connection string
 const dbURL = 'mongodb+srv://user1:UUTo7oqGN58dZqE3@timeclock.oaikt.mongodb.net/TimeClock?retryWrites=true&w=majority';
@@ -70,6 +71,19 @@ app.get('/allpunches',(req,res) => {
 
 app.get('/', (req,res) =>{
     res.render('index');
+})
+
+app.post('/', (req, res) => {
+    const user = new User({
+        userName: 'uname',
+        userPassword: 'pw',
+        userType: 1
+    });
+
+    user.save()
+        .then((result) => {
+            res.redirect('/landing');
+        });
 })
 
 app.get('/landing',(req, res) => {

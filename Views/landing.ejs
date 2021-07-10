@@ -7,14 +7,16 @@
 
     <body>
         <h1>Welcome! </h1>
+        <a href="/checkIn">Clock In</a><p>  </p><a href="/checkOut">Clock Out</a>
         <div class="Time-Clocks">
             <h2>Time Clocks</h2>
-            <% if (timeClocks.length > 0) { %>
+            <ul>
+                <% if (timeClocks.length > 0) { %>
                 <% timeClocks.forEach(timeClock => { %>
-                <h3><%=timeClock.clockType %></h3>
-                <p><%=timeClock.clockTime %></p>
+                <li><h3><%=timeClock.clockType %>: </h3><p><%=timeClock.clockTime %></p></li>
                 <% }) %>
             <% } %>
+            </ul>
         </div>
 
     </body>

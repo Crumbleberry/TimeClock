@@ -2,8 +2,14 @@
 const express = require('express');
 const app = express();
 
+//Setting up the body parser
+const bodyparser = require('body-parser');
+app.use(bodyparser.urlencoded({ extended: true })); 
+
 // Set up the view engine
 app.set('view engine', 'ejs');
+
+
 
 // Set up the database
 const mongoose = require('mongoose');
@@ -25,7 +31,24 @@ app.get('/CheckIn', (req, res) => {
 
     timecheck.save()
         .then((result) => {
-            res.send(result)
+            res.redirect('/landing');
+        })
+        .catch((err) => {
+            console.log(err);
+            res.send(err);
+        });
+})
+
+app.get('/CheckOut', (req, res) => {
+    const timecheck = new TimeCheck({
+        clockType: 'Out',
+        clockTime: Date.now(),
+        clockUser: 2
+    });
+
+    timecheck.save()
+        .then((result) => {
+            res.redirect('/landing');
         })
         .catch((err) => {
             console.log(err);
@@ -36,7 +59,7 @@ app.get('/CheckIn', (req, res) => {
 app.get('/allpunches',(req,res) => {
     TimeCheck.find()
         .then((result) => {
-            res.send(result);
+            res.redirect('/landing');
         })
         .catch((err) => {
             console.log(err);

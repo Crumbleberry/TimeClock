@@ -77,7 +77,7 @@ app.get('/createAccount', (req, res) => {
     res.render('createUser');
 })
 
-app.post('/', (req, res) => {
+app.post('/login', (req, res) => {
     var uName = req.body.userName;
     var pw = req.body.password;
     var validUser = false;
@@ -119,12 +119,12 @@ app.post('/createAccount',(req,res) => {
     User.find()
         .then((result) => {
             if(result.length > 0) {
-                result.foreach(User => {
+                result.forEach(User => {
                     if(uName === User.uName) {
                         userExists = true;
                     }
                     if(User.userID > maxID) {
-                        maxID = userID;
+                        maxID = User.userID;
                     }
                 })
             }
@@ -142,7 +142,7 @@ app.post('/createAccount',(req,res) => {
 
             user.save()
                 .then((result) => {
-                    res.redirect('/user/${User.userID}/landing');
+                    res.redirect(`/user/${User.userID}/landing`);
                 })
         }
 

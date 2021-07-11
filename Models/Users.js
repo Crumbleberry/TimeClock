@@ -13,6 +13,10 @@ const UserSchema = new Schema({
     userType: {
         type: Number,
         required: true
+    },
+    userID: {
+        type: Number,
+        required: true
     }
 },{timestamps: true});
 

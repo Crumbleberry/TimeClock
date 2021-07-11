@@ -73,10 +73,16 @@ app.get('/', (req,res) =>{
     res.render('index');
 })
 
+app.get('/createAccount', (req, res) => {
+    res.render('createUser');
+})
+
 app.post('/', (req, res) => {
     var uName = req.body.userName;
     var pw = req.body.password;
     var validUser = false;
+    var userID;
+
     /*const user = new User({
     *    userName: uName,
     *    userPassword: pw,
@@ -88,14 +94,15 @@ app.post('/', (req, res) => {
             result.forEach(User => {
                 if(uName === User.userName && pw === User.userPassword) {
                     validUser = true;
+                    userID = 1;
                 } 
             });
         })
 
-        if(validUser === true) {
-            res.redirect('/landing');
+        if(validUser) {
+            res.redirect('/user/${userID}/landing');
         } else {
-            return res.status(401).end('Incorrect Username and/or Password!');
+            res.send('Invalid Username and/or Password')
         }
     /*user.save()
         .then((result) => {
@@ -103,12 +110,49 @@ app.post('/', (req, res) => {
         });*/
 })
 
-app.get('/landing',(req, res) => {
+app.post('/createAccount',(req,res) => {
+    var uName = req.body.userName;
+    var pw = req.body.password;
+    var userExists = false;
+    var maxID = 0;
+
+    User.find()
+        .then((result) => {
+            if(result.length > 0) {
+                result.foreach(User => {
+                    if(uName === User.uName) {
+                        userExists = true;
+                    }
+                    if(User.userID > maxID) {
+                        maxID = userID;
+                    }
+                })
+            }
+        })
+
+        if(userExists) {
+            res.send('This Username is already in use');
+        } else {
+            const user = new User({
+                userName: uName,
+                userPassword: pw,
+                userType: 1,
+                userID: maxID + 1
+            })
+
+            user.save()
+                .then((result) => {
+                    res.redirect('/user/${User.userID}/landing');
+                })
+        }
+
+})
+
+app.get('/user/:id/landing',(req, res) => {
     TimeCheck.find()
         .then((result) => {
             res.render('landing', {timeClocks: result});
         })
-    
 })
 
 app.listen(3000);

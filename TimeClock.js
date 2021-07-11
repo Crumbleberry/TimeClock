@@ -4,7 +4,7 @@ const app = express();
 
 //Setting up the body parser
 const bodyparser = require('body-parser');
-app.use(bodyparser.urlencoded({ extended: true })); 
+app.use(bodyparser.urlencoded({extended: true})); 
 
 // Set up the view engine
 app.set('view engine', 'ejs');
@@ -74,16 +74,33 @@ app.get('/', (req,res) =>{
 })
 
 app.post('/', (req, res) => {
-    const user = new User({
-        userName: 'uname',
-        userPassword: 'pw',
-        userType: 1
-    });
+    var uName = req.body.userName;
+    var pw = req.body.password;
+    var validUser = false;
+    /*const user = new User({
+    *    userName: uName,
+    *    userPassword: pw,
+    *    userType: 1
+    });*/
 
-    user.save()
+    User.find()
+        .then((result) => {
+            result.forEach(User => {
+                if(uName === User.userName && pw === User.userPassword) {
+                    validUser = true;
+                } 
+            });
+        })
+
+        if(validUser === true) {
+            res.redirect('/landing');
+        } else {
+            return res.status(401).end('Incorrect Username and/or Password!');
+        }
+    /*user.save()
         .then((result) => {
             res.redirect('/landing');
-        });
+        });*/
 })
 
 app.get('/landing',(req, res) => {

@@ -153,11 +153,12 @@ app.get('/user/:id/landing', async (req, res) => {
     await User.find({userID: req.params.id})
     .then((result) => {
         user = result[0].userName;
+        userID = result[0].userID;
     })
 
     TimeCheck.find({clockUser: req.params.id})
         .then((result) => {
-            res.render('landing', {timeClocks: result, userName: user});
+            res.render('landing', {timeClocks: result, userName: user, curUserID: userID});
         })
 })
 

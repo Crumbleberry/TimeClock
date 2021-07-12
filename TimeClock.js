@@ -23,16 +23,16 @@ mongoose.connect(dbURL)
     .then((result) => console.log('Connected to db'))
     .catch((err) => console.log(err));
 
-app.get('/CheckIn', (req, res) => {
+app.get('/user/:id/CheckIn', (req, res) => {
     const timecheck = new TimeCheck({
         clockType: 'In',
         clockTime: Date.now(),
-        clockUser: 2
+        clockUser: req.params.id
     });
 
     timecheck.save()
         .then((result) => {
-            res.redirect('/landing');
+            res.redirect(`/user/${req.params.id}/landing`);
         })
         .catch((err) => {
             console.log(err);
@@ -40,16 +40,16 @@ app.get('/CheckIn', (req, res) => {
         });
 })
 
-app.get('/CheckOut', (req, res) => {
+app.get('/user/:id/CheckOut', (req, res) => {
     const timecheck = new TimeCheck({
         clockType: 'Out',
         clockTime: Date.now(),
-        clockUser: 2
+        clockUser: req.params.id
     });
 
     timecheck.save()
         .then((result) => {
-            res.redirect('/landing');
+            res.redirect(`/user/${req.params.id}/landing`);
         })
         .catch((err) => {
             console.log(err);
@@ -77,7 +77,7 @@ app.get('/createAccount', (req, res) => {
     res.render('createUser');
 })
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     var uName = req.body.userName;
     var pw = req.body.password;
     var validUser = false;
@@ -89,34 +89,32 @@ app.post('/login', (req, res) => {
     *    userType: 1
     });*/
 
-    User.find()
+    await User.find({userName: uName, userPassword: pw})
         .then((result) => {
-            result.forEach(User => {
-                if(uName === User.userName && pw === User.userPassword) {
-                    validUser = true;
-                    userID = 1;
-                } 
-            });
+            if(result.length > 0) {
+                validUser = true;
+                userID = result[0].userID
+            }
         })
 
-        if(validUser) {
-            res.redirect('/user/${userID}/landing');
-        } else {
-            res.send('Invalid Username and/or Password')
-        }
+    if(validUser) {
+        res.redirect(`/user/${userID}/landing`);
+    } else {
+        res.send('Invalid Username and/or Password')
+    }
     /*user.save()
         .then((result) => {
             res.redirect('/landing');
         });*/
 })
 
-app.post('/createAccount',(req,res) => {
+app.post('/createAccount',async (req,res) => {
     var uName = req.body.userName;
     var pw = req.body.password;
     var userExists = false;
     var maxID = 0;
 
-    User.find()
+    await User.find()
         .then((result) => {
             if(result.length > 0) {
                 result.forEach(User => {
@@ -138,20 +136,28 @@ app.post('/createAccount',(req,res) => {
                 userPassword: pw,
                 userType: 1,
                 userID: maxID + 1
-            })
+            });
 
             user.save()
                 .then((result) => {
-                    res.redirect(`/user/${User.userID}/landing`);
+                    //res.send(result);
+                    res.redirect(`/user/${result.userID}/landing`);
                 })
         }
 
 })
 
-app.get('/user/:id/landing',(req, res) => {
-    TimeCheck.find()
+app.get('/user/:id/landing', async (req, res) => {
+    var user = '';
+
+    await User.find({userID: req.params.id})
+    .then((result) => {
+        user = result[0].userName;
+    })
+
+    TimeCheck.find({clockUser: req.params.id})
         .then((result) => {
-            res.render('landing', {timeClocks: result});
+            res.render('landing', {timeClocks: result, userName: user});
         })
 })
 

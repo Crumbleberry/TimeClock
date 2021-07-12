@@ -6,8 +6,8 @@
     </head>
 
     <body>
-        <h1>Welcome! </h1>
-        <a href="/checkIn">Clock In</a><p>  </p><a href="/checkOut">Clock Out</a>
+        <h1>Welcome <%=userName %>! </h1>
+        <a href="/user/<%=timeClocks[0].clockUser%>/checkIn">Clock In</a><p>  </p><a href="/user/<%=timeClocks[0].clockUser%>/checkOut">Clock Out</a>
         <div class="Time-Clocks">
             <h2>Time Clocks</h2>
             <ul>

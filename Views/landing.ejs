@@ -3,21 +3,31 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>TimeClock 1.0</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     </head>
 
     <body>
-        <h1>Welcome <%=userName %>! </h1>
-        <a href="/user/<%=curUserID%>/checkIn">Clock In</a><p>  </p><a href="/user/<%=curUserID%>/checkOut">Clock Out</a>
-        <div class="Time-Clocks">
-            <h2>Time Clocks</h2>
-            <ul>
-                <% if (timeClocks.length > 0) { %>
-                <% timeClocks.forEach(timeClock => { %>
-                <li><h3><%=timeClock.clockType %>: </h3><p><%=timeClock.clockTime %></p></li>
-                <% }) %>
-            <% } %>
-            </ul>
+        <div class="container-fluid bg-info text-white py-2">
+            <h1 style="display: inline;">Welcome <%=userName %>! </h1>
+            <% if(curStatus === 'Out') { %>
+            <a href="/user/<%=curUserID%>/checkIn"><button type="button" class="btn btn-light" style=" float: right;">Clock In</button></a><% } else { %><a href="/user/<%=curUserID%>/checkOut"><button type="button" class="btn btn-light" style="float: right;">Clock Out</button></a> <% }%>
         </div>
+            <div class="container p-3 mb-2 bg-light text-dark">
+                <h2>Time Clocks</h2>
+            <div class="container">
+                <table class="table">
+                    <tr><thead class="thead-dark"><th>Type</th><th>Time</th></thead></tr>
+                    <% if (timeClocks.length > 0) { %>
+                    <% timeClocks.forEach(timeClock => { %>
+                        <tr>
+                    <td><h3 style="display: inline;"><%=timeClock.clockType %>: </h3></td><td><p style="display: inline;"><%=timeClock.clockTime %></p></td>
+                    </tr>
+                    <% }) %>
+                <% } %>
+                </table>
+            </div>
+        
+    </div>
 
     </body>
 </html>

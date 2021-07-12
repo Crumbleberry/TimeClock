@@ -156,9 +156,9 @@ app.get('/user/:id/landing', async (req, res) => {
         userID = result[0].userID;
     })
 
-    TimeCheck.find({clockUser: req.params.id})
+    TimeCheck.find({clockUser: req.params.id}).sort({clockTime: -1})
         .then((result) => {
-            res.render('landing', {timeClocks: result, userName: user, curUserID: userID});
+            res.render('landing', {timeClocks: result, userName: user, curUserID: userID, curStatus: result[0].clockType});
         })
 })
 

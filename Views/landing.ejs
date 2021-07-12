@@ -8,12 +8,12 @@
 
     <body>
         <div class="container-fluid bg-info text-white py-2">
-            <h1 style="display: inline;">Welcome <%=userName %>! </h1>
-            <% if(curStatus === 'Out') { %>
-            <a href="/user/<%=curUserID%>/checkIn"><button type="button" class="btn btn-light" style=" float: right;">Clock In</button></a><% } else { %><a href="/user/<%=curUserID%>/checkOut"><button type="button" class="btn btn-light" style="float: right;">Clock Out</button></a> <% }%>
+            <h1 style="display: inline;">Welcome <%=userName %>! </h1><a href="/"><button type="button" class="btn btn-light" style=" float: right;">Sign Out</button></a>
         </div>
             <div class="container p-3 mb-2 bg-light text-dark">
-                <h2>Time Clocks</h2>
+                <h2 style="display: inline;">Time Clocks</h2>
+                <% if(curStatus === 'Out') { %>
+                    <a href="/user/<%=curUserID%>/checkIn"><button type="button" class="btn btn-light" style=" float: right;">Clock In</button></a><% } else { %><a href="/user/<%=curUserID%>/checkOut"><button type="button" class="btn btn-light" style="float: right;">Clock Out</button></a> <% }%>
             <div class="container">
                 <table class="table">
                     <tr><thead class="thead-dark"><th>Type</th><th>Time</th></thead></tr>

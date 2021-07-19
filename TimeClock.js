@@ -154,14 +154,35 @@ app.get('/user/:id/landing', async (req, res) => {
     .then((result) => {
         user = result[0].userName;
         userID = result[0].userID;
+        userType = result[0].userType;
     })
 
     TimeCheck.find({clockUser: req.params.id}).sort({clockTime: -1})
         .then((result) => {
             if(result[0]) {
-                res.render('landing', {timeClocks: result, userName: user, curUserID: userID, curStatus: result[0].clockType, timeToShow: true});
+                res.render('landing', {timeClocks: result, userName: user, curUserID: userID, curStatus: result[0].clockType, timeToShow: true, userType: userType});
             } else {
                 res.render('landing', {curUserID: userID, userName: user, curStatus: 'Out',timeToShow: false});
+            }
+           
+        })
+})
+
+app.get('/admin/:id/users', async (req, res) => {
+    var user = '';
+
+    await User.find({userID: req.params.id})
+    .then((result) => {
+        user = result[0].userName;
+        userID = result[0].userID;
+    })
+
+    User.find()
+        .then((result) => {
+            if(result[0]) {
+                res.render('adminUserChanges', {users: result, userName: user, curUserID: userID, curStatus: result[0].clockType, usersToShow: true});
+            } else {
+                res.render('adminUserChanges', {curUserID: userID, userName: user, curStatus: 'Out',usersToShow: false});
             }
            
         })

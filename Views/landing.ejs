@@ -8,7 +8,7 @@
 
     <body>
         <div class="container-fluid bg-info text-white py-2">
-            <h1 style="display: inline;">Welcome <%=userName %>! </h1><a href="/"><button type="button" class="btn btn-light" style=" float: right;">Sign Out</button></a>
+            <h1 style="display: inline;">Welcome <%=userName %>! </h1><% if(userType === 2) { %><a href="/admin/<%= curUserID %>/users"><button type="button" class="btn btn-light" style=" float: right;">Users</button></a><% } %><a href="/"><button type="button" class="btn btn-light" style=" float: right;">Sign Out</button></a>
         </div>
             <div class="container p-3 mb-2 bg-light text-dark">
                 <h2 style="display: inline;">Time Clocks</h2>

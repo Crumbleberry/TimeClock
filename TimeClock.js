@@ -158,7 +158,12 @@ app.get('/user/:id/landing', async (req, res) => {
 
     TimeCheck.find({clockUser: req.params.id}).sort({clockTime: -1})
         .then((result) => {
-            res.render('landing', {timeClocks: result, userName: user, curUserID: userID, curStatus: result[0].clockType});
+            if(result[0]) {
+                res.render('landing', {timeClocks: result, userName: user, curUserID: userID, curStatus: result[0].clockType, timeToShow: true});
+            } else {
+                res.render('landing', {curUserID: userID, userName: user, curStatus: 'Out',timeToShow: false});
+            }
+           
         })
 })
 

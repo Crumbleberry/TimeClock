@@ -12,17 +12,20 @@
         </div>
             <div class="container p-3 mb-2 bg-light text-dark">
                 <h2 style="display: inline;">Time Clocks</h2>
-                <% if(curStatus === 'Out') { %>
-                    <a href="/user/<%=curUserID%>/checkIn"><button type="button" class="btn btn-light" style=" float: right;">Clock In</button></a><% } else { %><a href="/user/<%=curUserID%>/checkOut"><button type="button" class="btn btn-light" style="float: right;">Clock Out</button></a> <% }%>
-            <div class="container">
-                <table class="table">
-                    <tr><thead class="thead-dark"><th>Type</th><th>Time</th></thead></tr>
-                    <% if (timeClocks.length > 0) { %>
-                    <% timeClocks.forEach(timeClock => { %>
-                        <tr>
-                    <td><h3 style="display: inline;"><%=timeClock.clockType %>: </h3></td><td><p style="display: inline;"><%=timeClock.clockTime %></p></td>
-                    </tr>
-                    <% }) %>
+                
+                    <% if(curStatus === 'Out') { %>
+                        <a href="/user/<%=curUserID%>/checkIn"><button type="button" class="btn btn-light" style=" float: right;">Clock In</button></a><% } else { %><a href="/user/<%=curUserID%>/checkOut"><button type="button" class="btn btn-light" style="float: right;">Clock Out</button></a> <% }%>
+                <div class="container">
+                    <table class="table">
+                        <tr><thead class="thead-dark"><th>Type</th><th>Time</th></thead></tr>
+                        <% if(timeToShow) { %>
+                        <% if (timeClocks.length > 0) { %>
+                        <% timeClocks.forEach(timeClock => { %>
+                            <tr>
+                        <td><h3 style="display: inline;"><%=timeClock.clockType %>: </h3></td><td><p style="display: inline;"><%=timeClock.clockTime %></p></td>
+                        </tr>
+                        <% }) %>
+                    <% } %>
                 <% } %>
                 </table>
             </div>

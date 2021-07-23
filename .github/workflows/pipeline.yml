@@ -32,5 +32,4 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Builds Node Application
         run: |
-          apt-get install node
           node TimeClock.js

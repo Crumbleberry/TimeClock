@@ -147,6 +147,52 @@ app.post('/createAccount',async (req,res) => {
 
 })
 
+function calculateTime(inputArray) {
+    var totalTime = 0;
+    inputArray.forEach(duel => {
+        totalTime += duel.second.clockTime - duel.first.clockTime;
+    })
+    return totalTime;
+}
+
+function createDuets(inputArray) {
+    var counter = 0;
+    var duets = [];
+    while(counter < inputArray.length) {
+        while(counter < inputArray.length && inputArray[counter].clockType != 'Out') {
+            counter++;
+        }
+        var outCounter = counter;
+        while(counter < inputArray.length && inputArray[counter].clockType != 'In') {
+            counter++;
+        }
+        var inCounter = counter;
+        if(inputArray[inCounter] && inputArray[outCounter]) {
+            var duet ={
+                first: inputArray[inCounter],
+                second: inputArray[outCounter]
+            }
+            duets.push(duet);
+        }
+    }
+    return duets;
+}
+
+function milisecondsToTime(miliseconds) {
+    const milInHour = 1000  * 60 * 60;
+    var  hours = Math.trunc(miliseconds / milInHour);
+    miliseconds = miliseconds - (hours *  milInHour);
+
+    const  milInMinute = 1000 * 60;
+    var minutes =  Math.trunc(miliseconds / milInMinute);
+    miliseconds = miliseconds - (minutes *  milInMinute);
+
+    const milInSecond =  1000;
+    var seconds =  Math.trunc(miliseconds / milInSecond);
+
+    return hours + ' h ' + minutes + ' m ' + seconds + ' s';
+}
+
 app.get('/user/:id/landing', async (req, res) => {
     var user = '';
 
@@ -159,8 +205,10 @@ app.get('/user/:id/landing', async (req, res) => {
 
     TimeCheck.find({clockUser: req.params.id}).sort({clockTime: -1})
         .then((result) => {
+            var totalTime = calculateTime(createDuets(result));
+
             if(result[0]) {
-                res.render('landing', {timeClocks: result, userName: user, curUserID: userID, curStatus: result[0].clockType, timeToShow: true, userType: userType});
+                res.render('landing', {timeClocks: result, userName: user, curUserID: userID, curStatus: result[0].clockType, timeToShow: true, userType: userType, totalTime: milisecondsToTime(totalTime)});
             } else {
                 res.render('landing', {curUserID: userID, userName: user, curStatus: 'Out',timeToShow: false});
             }
@@ -186,6 +234,40 @@ app.get('/admin/:id/users', async (req, res) => {
             }
            
         })
+})
+
+app.get('/pwchange/:id', async (req, res) => {
+    var user = '';
+
+    await User.find({userID: req.params.id})
+    .then((result) => {
+        res.render('pwchange', {userName: result[0].userName, curUserID: result[0].userID});
+    })
+
+    
+    
+})
+
+app.post('/pwchange/:id', async (req, res) => {
+    oldPassword = '';
+
+    await User.find({userID: req.params.id})
+    .then((result) => {
+        oldPassword = result[0].userPassword;
+    });
+
+    if(oldPassword != req.body.oldPassword) {
+        res.send('That is the incorrect password');
+    } else {
+        await User.find({userID: req.params.id})
+    .then((result) => {
+        result[0].userPassword = req.body.newPassword;
+        result[0].save()
+        .then((result) => {
+            res.redirect(`/user/${result.userID}/landing`);
+        })
+    });
+    }
 })
 
 app.listen(3000);

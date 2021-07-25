@@ -13,7 +13,7 @@ const timeCheckSchema = new Schema({
     clockUser: {
         type: Number,
         required: true
-    }
+    },
 },{timestamps: true});
 
 const TimeCheck = mongoose.model('TimeCheck',timeCheckSchema);

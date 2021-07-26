@@ -33,4 +33,4 @@ jobs:
       - name: Builds Node Application
         run: |
           sudo npm install
-          node TimeClock.js
+          timeout 10 node TimeClock.js

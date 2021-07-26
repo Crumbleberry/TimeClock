@@ -6,6 +6,9 @@ const app = express();
 const bodyparser = require('body-parser');
 app.use(bodyparser.urlencoded({extended: true})); 
 
+//Setting up the password hashing
+//const bcrypt = require('bcrypt');
+
 // Set up the view engine
 app.set('view engine', 'ejs');
 
@@ -236,6 +239,8 @@ app.get('/admin/:id/users', async (req, res) => {
         })
 })
 
+
+// GET routes
 app.get('/pwchange/:id', async (req, res) => {
     var user = '';
 
@@ -248,6 +253,7 @@ app.get('/pwchange/:id', async (req, res) => {
     
 })
 
+// POST routes
 app.post('/pwchange/:id', async (req, res) => {
     oldPassword = '';
 
@@ -269,5 +275,7 @@ app.post('/pwchange/:id', async (req, res) => {
     });
     }
 })
+
+
 
 app.listen(3000);

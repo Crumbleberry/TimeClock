@@ -20,7 +20,7 @@ const TimeCheck = require('./Models/TimeChecks');
 const User = require('./Models/Users');
 
 // Mongo DB connection string
-const dbURL = 'mongodb+srv://user1:UUTo7oqGN58dZqE3@timeclock.oaikt.mongodb.net/TimeClock?retryWrites=true&w=majority';
+const dbURL = 'mongodb+srv://XXXXXXXX@timeclock.oaikt.mongodb.net/TimeClock?retryWrites=true&w=majority';
 
 mongoose.connect(dbURL)
     .then((result) => console.log('Connected to db'))
